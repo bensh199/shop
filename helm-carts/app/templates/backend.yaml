@@ -19,3 +19,29 @@ spec:
           image: "{{ .Values.image.backend.repository }}:{{ .Values.image.backend.tag }}"
           ports:
             - containerPort: 8001
+          env:
+          - name: MONGODB_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: db_host
+          - name: KAFKA_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: kafka_host
+          - name: FRONTEND_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: frontend_server
+          - name: BACKEND_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: backend_server
+          - name: API_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: api_server

@@ -8,7 +8,7 @@ def buy_item(data):
     data_str = data.decode('utf-8')
 
     print(data)
-    producer = KafkaProducer(bootstrap_servers='localhost:9093', value_serializer=lambda v: json.dumps(v).encode('utf-8'))
+    producer = KafkaProducer(bootstrap_servers=f'{os.getenv("KAFKA_HOST")}', value_serializer=lambda v: json.dumps(v).encode('utf-8'))
     
     topic = "purchased-items"
 
