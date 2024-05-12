@@ -3,7 +3,7 @@ import os
 
 def get_bought_items(username, password):
     
-    api_url = 'http://127.0.0.1:8001/get_bought_items'
+    api_url = f'http://{os.getenv("BACKEND_HOST")}/get_bought_items'
 
     credentials = f'{username},{password}'
 
@@ -17,7 +17,7 @@ def buy_items(counter, item, username, password):
     data = f"{counter},{item},{username},{password}"
     print(data)
 
-    api_url = f'http://localhost:8001/buy_item'
+    api_url = f'http://{os.getenv("BACKEND_HOST")}/buy_item'
 
     response = requests.post(api_url, data=data)
 

@@ -16,6 +16,6 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: weatherapp-service
+                name: frontend-nodeport
                 port:
                   number: 3000

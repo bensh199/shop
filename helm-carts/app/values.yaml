@@ -1,13 +1,13 @@
 image:
   api:
     repository: bensh99/rami-levi-api
-    tag: latest
+    tag: amd64
   frontend:
     repository: bensh99/rami-levi-frontend
-    tag: latest
+    tag: amd64
   backend:
     repository: bensh99/rami-levi-backend
-    tag: latest
+    tag: amd64
 
 spec:
   replicas: 1

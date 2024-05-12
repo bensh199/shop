@@ -19,9 +19,8 @@ def get_bought_items():
     print(credentials)
     data = query_bought_items(credentials)
     print(data)
+    
     return data
-
-    return jsonify({'message': 'Item purchased successfully'}), 200
 
 
 # Run the Flask app

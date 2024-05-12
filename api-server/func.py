@@ -1,11 +1,12 @@
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
 from kafka import KafkaConsumer
+import os
 
 app = Flask(__name__)
 
 # MongoDB configuration
-MONGO_URI = 'mongodb://admin:admin@localhost:27017/'
+MONGO_URI = f'mongodb://admin:admin@{os.getenv("MONGODB_HOST")}/'
 DB_NAME = 'purchases'
 COLLECTION_NAME = 'items'
 
@@ -15,7 +16,7 @@ db = client[DB_NAME]
 collection = db[COLLECTION_NAME]
 
 # Kafka configuration
-KAFKA_SERVERS = 'localhost:9093'
+KAFKA_SERVERS = f'{os.getenv("KAFKA_HOST")}'
 KAFKA_TOPIC = 'purchased-items'
 
 # Connect to Kafka

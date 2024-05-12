@@ -2,6 +2,7 @@ from kafka import KafkaProducer
 from flask import jsonify
 import requests
 import json
+import os
 
 def buy_item(data):
     data_str = data.decode('utf-8')
@@ -16,7 +17,7 @@ def buy_item(data):
     producer.send(topic, value=message)
 
 def query_bought_items(credentials):
-    api_url = 'http://127.0.0.1:8003/purchased_items'
+    api_url = f'http://{os.getenv("API_HOST")}/purchased_items'
 
     print(credentials)
     response = requests.post(api_url, data=credentials)
