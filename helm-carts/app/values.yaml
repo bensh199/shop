@@ -1,0 +1,13 @@
+image:
+  api:
+    repository: bensh99/rami-levi-api
+    tag: latest
+  frontend:
+    repository: bensh99/rami-levi-frontend
+    tag: latest
+  backend:
+    repository: bensh99/rami-levi-backend
+    tag: latest
+
+spec:
+  replicas: 1

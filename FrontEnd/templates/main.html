@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}"> -->
+  <link rel="stylesheet" href="static/styles.css">
+  <title>Weather App</title>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <!-- <a class="navbar-brand" href="https://whats-the-weather.com"><img src="static/Whats-the-weather-logo.png"
+        style="width:42px;height:42px;"></a> -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="https://localhost:8000">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link"
+            href="https://www.google.com/search?sca_esv=7fb4d62672696752&sxsrf=ACQVn0-JfqcI5XbdaoW56ssyMrdxr8iJ_Q:1709856395943&q=link&tbm=isch&source=lnms&sa=X&ved=2ahUKEwiijOO4r-OEAxXeUaQEHYFyAP8Q0pQJegQIDxAB&biw=1728&bih=873&dpr=2">Link</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/get_bought_items">Get Bought Items</a>
+          </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Usefull links
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/download">Download sky picture</a>
+            <a class="dropdown-item" href="/update-dynamodb">Update DynamoDB</a>
+            <a class="dropdown-item" href="/history">Download Data</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="https://teamwoodgames.com/">if you're board</a>
+          </div>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0" action="/" method="post">
+        <input class="form-control search-bar mr-sm-2" name="city" id="city" type="search" placeholder="Search" aria-label="Search"
+          required>
+        <button class="btn my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+
+  <div class="container welcome-banner text-center p-3 mb-5 bg-body-tertiary">
+    <h1> place holder!</h1>
+  </div>
+
+  <div class="container text-center">
+    <div class="row g-5 justify-content-evenly cards-wrap justify-content-center">
+      <div class="counter-box">
+        <div class="card-body">
+          <form class="form-inline-bought-items my-2 my-lg-0" action="/get_bought_items" method="POST"></form>
+          <input class="form-control search-bar-bought-items mr-sm-2" type="text" name="username" id="username-input" placeholder="username" aria-label="Search required">
+          <input class="form-control search-bar-bought-items mr-sm-2" type="text" name="password" id="password-input" placeholder="password" aria-label="Search required">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container text-center">
+    <div class="row g-5 justify-content-evenly cards-wrap">
+      {% for j in range(item_list_length)%}
+      <div class="card-container d-flex flex-warp bd-highlight mb-3" id="card-num-{{j}}" style="width: 14rem;">
+        <div class="card-body">
+          <form action="/buy_items" method="POST" onsubmit="prepareData(event)">
+          <input class="item-name" type="text" name="item-name" value="{{ item_list[j] }}" readonly="1">
+            <div class="counter-box">
+              <input type="number" name="counter" readonly="1" id="counter{{ j }}" class="counter" value="0"/>
+              <button type="button" class="increment-buttons" onclick="changeCount({{ j }}, -1)">-</button>
+              <button type="button" class="increment-buttons" onclick="changeCount({{ j }}, 1)">+</button>
+              
+              <input type="hidden" name="username" value="">
+              <input type="hidden" name="password" value="">
+              <input class="buy-items" type="submit" value="Buy Items">
+            </div>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+      <script>
+        function prepareData(event) {
+          var UserName = document.getElementById('username-input').value;
+          var Password = document.getElementById('password-input').value;
+          event.target.elements.username.value = UserName;
+          event.target.elements.password.value = Password;
+          event.preventDefault();
+
+          const formData = new FormData(event.target);
+          response = fetch("/buy_items",{
+            method: "POST",
+            body: formData
+          }).then(response => {
+            response.json().then(data =>{
+              console.log(data)
+              if(data.status == "ok"){
+                alert("Order created!")
+              } else {
+                alert(data.msg)
+              }
+            })
+          })
+        }
+        function changeCount(id,amount) {
+          var val = document.getElementById(`counter${id}`).value;
+          document.getElementById(`counter${id}`).value = Number(val) + amount
+        }
+        </script>
+  </div>
+
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
